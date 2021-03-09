@@ -16,7 +16,7 @@ The main feature to fetch the cities' list is performed by a one-time running sc
 
 - Build and Run containers with:
 ```
-make docker-start.
+make docker-start
 ```
 After running, you will be ready to play with the application.
 - Migrate with:
@@ -70,17 +70,17 @@ Create or update the weather condition for a `date` in the city identified by `i
 <h4>Parameters</h4>
 
 - date: optional<br>
-A string formatted as `yyyy-mm-dd` or deserved with 'today' or 'tomorrow'. default value is 'today'.
+A string formatted as `yyyy-mm-dd` or deserved with "today" or "tomorrow". default value is "today".
 - condition: required<br>
 A string presenting the weather.
 
 <h4>Response</h4>
 
 - success<br>
-Returns 200 status code with message 'Set the weather for %%date%% in %%city%% successfully'.
+Returns 200 status code with message "Set the weather for %%date%% in %%city%% successfully".
 - error
-    - Input validation failure: Returns 400 status code with message 'date or condition are incorrect or not provided'.
-    - Server internal error: Returns 500 status code with message 'Cannot find the city for id %%id%%'.
+    - Input validation failure: Returns 400 status code with message "date or condition are incorrect or not provided".
+    - Server internal error: Returns 500 status code with message "Cannot find the city for id %%id%%".
 
 ### Set the forecast in a city
 ```
@@ -95,10 +95,10 @@ An array of weather objects that have `date` and `condition`.
 <h4>Response</h4>
 
 - success<br>
-Returns 200 status code with message 'Set the forecast from %%date%% to %%date%% in %%city%% successfully.'
+Returns 200 status code with message "Set the forecast from %%date%% to %%date%% in %%city%% successfully".
 - error
-    - Input validation failure: Returns 400 status code with message 'forecast data are invalid or not provided'.
-    - Server internal error: Returns 500 status code with message 'Cannot find the city for id %%id%%'.
+    - Input validation failure: Returns 400 status code with message "forecast data are invalid or not provided".
+    - Server internal error: Returns 500 status code with message "Cannot find the city for id %%id%%".
 
 ### Get the weather for a specific date in a city
 ```
@@ -108,17 +108,17 @@ Retrives the weather for the `date` in the city identified by `id`.
 <h4>Parameters</h4>
 
 - date: optional<br>
-A string formatted as `yyyy-mm-dd` or deserved with 'today' or 'tomorrow'. default value is 'today'.
+A string formatted as `yyyy-mm-dd` or deserved with "today" or "tomorrow". default value is "today".
 <h4>Response</h4>
 
 A string for the weather condition.
 
 - success<br>
-Returns 200 status code with message 'Get the weather for %%date%% in %%city%% successfully' and condition data.
+Returns 200 status code with message "Get the weather for %%date%% in %%city%% successfully" and condition data.
 - error
-    - Input validation failure: Returns 400 status code with message 'date are invalid'.
-    - Unprocessable entity: Returns 422 status code with message 'No weather data for %%date%%'.
-    - Server internal error: Returns 500 status code with message 'Cannot find the city for id %%id%%'.
+    - Input validation failure: Returns 400 status code with message "date are invalid".
+    - Unprocessable entity: Returns 422 status code with message "No weather data for %%date%%".
+    - Server internal error: Returns 500 status code with message "Cannot find the city for id %%id%%".
 
 ### Get the forecast in a city
 ```
@@ -134,7 +134,7 @@ A number of days from today. default value is 10 and max/min is 10/1
 
 An array of weather objects
 - success<br>
-Returns 200 status code with message 'Get next %%days%% weather forecast'.
+Returns 200 status code with message "Get next %%days%% weather forecast".
 - error<br>
-    - Input validation faliure: Returns 400 status code with message 'days should be an integer in range 1 to 10'.
-    - Server internal error: Returns 500 status code with message 'Cannot find the city for id %%id%%'.
+    - Input validation faliure: Returns 400 status code with message "days should be an integer in range 1 to 10".
+    - Server internal error: Returns 500 status code with message "Cannot find the city for id %%id%%".
