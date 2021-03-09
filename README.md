@@ -14,6 +14,8 @@ The main feature to fetch the cities' list is performed by a one-time running sc
 
 ### Run with Docker
 
+Run the following commands after renaming `.env.example` to `.env`.
+
 - Build and Run containers with:
 ```
 make docker-start
