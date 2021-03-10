@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Weather;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
+use RuntimeException;
 
 final class MusementException extends Exception
 {
@@ -19,7 +20,7 @@ final class MusementException extends Exception
 
 final class Musement
 {
-    private iterable $cities;
+    private $cities;
 
     public $http;
 
@@ -28,7 +29,7 @@ final class Musement
         $this->http = new Client(['verify' => false]);
     }
 
-    public function getCities(): iterable
+    public function getCities()
     {
         return $this->cities;
     }
@@ -46,32 +47,24 @@ final class Musement
                 $this->setCities(json_decode($response->getBody(), true));
             },
             function (Exception $e) {
-                throw new MusementException($e);
+                throw new MusementException();
             }
-        );
-        $promise->wait();
+        )->wait();
     }
 
-    public function fetchWeathersOfCities()
+    public function fetchWeathers($processCity = null, $processWeather = null)
     {
         $cities = $this->getCities();
-        $promises = (function () use ($cities) {
+        $promises = (function () use ($cities, $processCity) {
             foreach ($cities as $city) {
-                // create or update a city to cities table
-                $city = City::updateOrCreate(
-                    [
-                        'id' => $city['id']
-                    ],
-                    [
-                        'name' => $city['name'],
-                        'latitude' => $city['latitude'],
-                        'longitude' => $city['longitude'],
-                    ],
-                );
-                yield $city->id => $this->http->getAsync($_ENV['WEATHER_API_URI'], [
+                if ($processCity) {
+                    call_user_func($processCity, $city);
+                }
+
+                yield $city['id'] => $this->http->getAsync($_ENV['WEATHER_API_URI'], [
                     'query' => [
                         'key' => $_ENV['WEATHER_API_KEY'],
-                        'q' => $city->latitude . ',' . $city->longitude,
+                        'q' => $city['latitude'] . ',' . $city['longitude'],
                         'days' => 2,
                     ],
                 ]);
@@ -80,19 +73,35 @@ final class Musement
 
         $eachPromise = new EachPromise($promises, [
             'concurrency' => 5,
-            'fulfilled' => function (Response $response, $cityId) {
+            'fulfilled' => function (Response $response, $cityId) use ($processWeather) {
                 $forecast = json_decode($response->getBody(), true);
-                $this->processWithWeather($forecast, $cityId);
+                if ($processWeather) {
+                    call_user_func($processWeather, $forecast, $cityId);
+                }
             },
             'rejected' => function (Exception $e) {
-                throw new MusementException($e);
+                throw new MusementException();
             },
         ]);
 
         $eachPromise->promise()->wait();
     }
 
-    public function processWithWeather($forecast, $cityId)
+    public static function processCity($city)
+    {
+        City::updateOrCreate(
+            [
+                'id' => $city['id']
+            ],
+            [
+                'name' => $city['name'],
+                'latitude' => $city['latitude'],
+                'longitude' => $city['longitude'],
+            ],
+        );
+    }
+
+    public static function processWeather($forecast, $cityId)
     {
         $city = City::find($cityId);
         if (isset($city) && !empty($city)) {
@@ -133,7 +142,7 @@ final class Musement
     public function run()
     {
         $this->fetchListOfCities();
-        $this->fetchWeathersOfCities();
+        $this->fetchWeathers([self::class, 'processCity'], [self::class, 'processWeather']);
     }
 }
 

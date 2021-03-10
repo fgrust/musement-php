@@ -57,15 +57,41 @@ class MusementTest extends TestCase
         $musement = new Musement();
         $musement->fetchListOfCities();
 
-        $city = $musement->getCities()[rand(0, count($musement->getCities()))];
+        $musement->fetchWeathers(
+            function ($city) {
+                $this->assertIsArray($city);
+                $this->assertArrayHasKey('name', $city);
+                $this->assertIsString($city['name']);
+                $this->assertArrayHasKey('latitude', $city);
+                $this->assertIsNumeric($city['latitude']);
+                $this->assertArrayHasKey('longitude', $city);
+                $this->assertIsNumeric($city['longitude']);
+            },
+            function ($forecast, $cityId) use ($musement) {
+                $this->assertIsArray($forecast);
+                $this->assertArrayHasKey('forecast', $forecast);
+                $this->assertIsArray($forecast['forecast']);
+                $this->assertArrayHasKey('forecastday', $forecast['forecast']);
+                $forecastDay = $forecast['forecast']['forecastday'];
+                $this->assertIsIterable($forecastDay);
+                $this->assertIsArray($forecastDay[0]);
+                $this->assertArrayHasKey('day', $forecastDay[0]);
+                $this->assertIsArray($forecastDay[0]['day']);
+                $this->assertArrayHasKey('condition', $forecastDay[0]['day']);
+                $this->assertIsArray($forecastDay[0]['day']['condition']);
+                $this->assertArrayHasKey('text', $forecastDay[0]['day']['condition']);
+                $this->assertIsString($forecastDay[0]['day']['condition']['text']);
+                $this->assertArrayHasKey('date', $forecastDay[0]);
+                $this->assertIsString($forecastDay[0]['date']);
 
-        ob_start();
-        $musement->fetchWeather($city);
-        $this->assertStringContainsString(
-            "Processed city " . $city['name'] . " | ",
-            ob_get_contents()
+                $this->assertEquals(true, (function () use ($cityId, $musement) {
+                    foreach ($musement->getCities() as $city) {
+                        if ($city['id'] === $cityId) {return true;}
+                    }
+                    return false;
+                })());
+            }
         );
-        ob_end_clean();
     }
 
     public function testFetchWeatherExceptionWithAPIWrongDomain()
@@ -73,12 +99,10 @@ class MusementTest extends TestCase
         $musement = new Musement();
         $musement->fetchListOfCities();
 
-        $city = $musement->getCities()[rand(0, count($musement->getCities()))];
-
         $_ENV['WEATHER_API_URI'] = "https://request.exception.com";
 
         $this->expectException(MusementException::class);
-        $musement->fetchWeather($city);
+        $musement->fetchWeathers();
     }
 
     public function testFetchWeatherExceptionWithAPIWrongKey()
@@ -86,23 +110,10 @@ class MusementTest extends TestCase
         $musement = new Musement();
         $musement->fetchListOfCities();
 
-        $city = $musement->getCities()[rand(0, count($musement->getCities()))];
-
         $_ENV['WEATHER_API_KEY'] = "wrongkey";
 
         $this->expectException(MusementException::class);
-        $musement->fetchWeather($city);
-    }
-
-    public function testFetchWeatherExceptionWithWrongParams()
-    {
-        $musement = new Musement();
-        $musement->fetchListOfCities();
-
-        $city = array();
-
-        $this->expectException(MusementException::class);
-        $musement->fetchWeather($city);
+        $musement->fetchWeathers();
     }
 
     public function testOutput()
