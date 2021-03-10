@@ -140,3 +140,7 @@ Returns 200 status code with message "Get next %%days%% weather forecast".
 - error<br>
     - Input validation faliure: Returns 400 status code with message "days should be an integer in range 1 to 10".
     - Server internal error: Returns 500 status code with message "Cannot find the city for id %%id%%".
+
+## Author
+
+Jesse Liu

@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 ARG user
 ARG uid
@@ -13,7 +13,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd
 RUN docker-php-ext-configure mysqli --with-mysqli=mysqlnd
-RUN docker-php-ext-install pdo_mysql mysqli mbstring bcmath
+RUN docker-php-ext-install pdo_mysql mysqli bcmath
 RUN docker-php-ext-enable pdo_mysql mysqli
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

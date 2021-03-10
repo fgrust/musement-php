@@ -2,7 +2,7 @@
     "name": "jagaad/jagaad_php",
     "description": "Extended Musement API endpoint",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "guzzlehttp/guzzle": "^7.0",
         "vlucas/phpdotenv": "^5.3",
         "illuminate/database": "^8.31",
@@ -19,10 +19,12 @@
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12.81"
     },
     "scripts": {
         "test": "./vendor/bin/phpunit --color=always",
+        "stan": "./vendor/bin/phpstan analyse --generate-baseline",
         "start": "php -S 127.0.0.1:8000 -t public/",
         "fetch": "php ./app.php",
         "migrate": "php ./vendor/bin/phinx migrate -c ./config/migration.php",
