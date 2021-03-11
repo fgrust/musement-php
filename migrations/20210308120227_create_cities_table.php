@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 final class CreateCitiesTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->schema->create('cities', function (Blueprint $table) {
             $table->unsignedInteger('id');
@@ -19,7 +19,7 @@ final class CreateCitiesTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         $this->schema->dropIfExists('cities');
     }

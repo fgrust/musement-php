@@ -23,8 +23,12 @@
         "phpstan/phpstan": "^0.12.81"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit --color=always",
-        "stan": "./vendor/bin/phpstan analyse --generate-baseline",
+        "test:unit": "./vendor/bin/phpunit --color=always",
+        "test:types": "./vendor/bin/phpstan analyse",
+        "test": [
+            "@test:unit",
+            "@test:tyoes"
+        ],
         "start": "php -S 127.0.0.1:8000 -t public/",
         "fetch": "php ./app.php",
         "migrate": "php ./vendor/bin/phinx migrate -c ./config/migration.php",

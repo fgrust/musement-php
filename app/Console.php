@@ -8,7 +8,6 @@ use App\Models\City;
 use App\Models\Weather;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
-use RuntimeException;
 
 final class MusementException extends Exception
 {
@@ -20,26 +19,35 @@ final class MusementException extends Exception
 
 final class Musement
 {
+    /**
+     * @var array<string,mixed>[]
+     */
     private $cities;
 
-    public $http;
+    public Client $http;
 
     public function __construct()
     {
         $this->http = new Client(['verify' => false]);
     }
 
+    /**
+     * @return array<string,mixed>[]
+     */
     public function getCities()
     {
         return $this->cities;
     }
 
-    public function setCities($cities)
+    /**
+     * @param array<string,mixed>[] $cities 
+     */
+    public function setCities($cities): void
     {
-        return $this->cities = $cities;
+        $this->cities = $cities;
     }
 
-    public function fetchListOfCities()
+    public function fetchListOfCities(): void
     {
         $promise = $this->http->getAsync($_ENV['MUSEMENT_API_URI']);
         $promise->then(
@@ -52,7 +60,7 @@ final class Musement
         )->wait();
     }
 
-    public function fetchWeathers($processCity = null, $processWeather = null)
+    public function fetchWeathers(?callable $processCity = null, ?callable $processWeather = null): void
     {
         $cities = $this->getCities();
         $promises = (function () use ($cities, $processCity) {
@@ -87,7 +95,12 @@ final class Musement
         $eachPromise->promise()->wait();
     }
 
-    public static function processCity($city)
+    /**
+     * 
+     * @param array<string,mixed> $city 
+     * @return void 
+     */
+    public static function processCity(array $city): void
     {
         City::updateOrCreate(
             [
@@ -101,11 +114,16 @@ final class Musement
         );
     }
 
-    public static function processWeather($forecast, $cityId)
+    /**
+     * 
+     * @param array<string,mixed> $forecast
+     * @return void 
+     */
+    public static function processWeather(array $forecast, int $cityId): void
     {
         $city = City::find($cityId);
         if (isset($city) && !empty($city)) {
-            if (isset($forecast) && isset($forecast['forecast']) && isset($forecast['forecast']['forecastday'])) {
+            if (isset($forecast['forecast']) && isset($forecast['forecast']['forecastday'])) {
                 $forecastDay = $forecast['forecast']['forecastday'];
                 if (count($forecastDay) >= 2) {
                     self::output($city['name'], $forecastDay[0]['day']['condition']['text'], $forecastDay[1]['day']['condition']['text']);
@@ -134,12 +152,12 @@ final class Musement
         }
     }
 
-    public static function output($city, $today, $tomorrow)
+    public static function output(string $city, string $today, string $tomorrow): void
     {
         echo "Processed city " . $city . " | " . $today . " - " . $tomorrow . "\n";
     }
-
-    public function run()
+    
+    public function run(): void
     {
         $this->fetchListOfCities();
         $this->fetchWeathers([self::class, 'processCity'], [self::class, 'processWeather']);

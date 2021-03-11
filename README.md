@@ -28,6 +28,15 @@ make migrate
 This command performs to migrate necessary tables to mysql database on `db` container.<br>
 You can rollback the last migration by running `make migrate-rollback`.
 - Test
+    - Unit test with PHPUnit
+```
+make test-unit
+```
+    - Static analysis with PHPStan
+```
+make test-types
+```
+All above the tests can be performed sequentially with one command.
 ```
 make test
 ```

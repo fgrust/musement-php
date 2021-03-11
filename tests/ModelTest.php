@@ -25,7 +25,7 @@ class ModelTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    public function testCreateCity()
+    public function testCreateCity(): void
     {
         $city = City::create([
             'id' => 4,
@@ -40,7 +40,7 @@ class ModelTest extends TestCase
         $this->assertEquals(22.22, $city->longitude);
     }
 
-    public function testCreateWeatherAssociatedWithCity()
+    public function testCreateWeatherAssociatedWithCity(): void
     {
         $city = City::create([
             'id' => 4,
@@ -64,7 +64,7 @@ class ModelTest extends TestCase
         $this->assertEquals('Cloudy', $city->weathers[0]->weather);
     }
 
-    public function testCreateWeatherWithPrimaryDuplication()
+    public function testCreateWeatherWithPrimaryDuplication(): void
     {
         $city = City::create([
             'id' => 4,
@@ -89,7 +89,7 @@ class ModelTest extends TestCase
         $weather->save();
     }
 
-    public function testUpdateOrCreateCity()
+    public function testUpdateOrCreateCity(): void
     {
         $city = City::create([
             'id' => 4,
@@ -131,7 +131,7 @@ class ModelTest extends TestCase
         $this->assertEquals(33.22, $city->longitude);
     }
 
-    public function testUpdateOrCreateWeather()
+    public function testUpdateOrCreateWeather(): void
     {
         $city = City::create([
             'id' => 4,

@@ -4,3 +4,4 @@ docker-compose.yml
 /docker
 .gitignore
 .env.example
+phpstan-baseline.neon

@@ -38,5 +38,11 @@ migrate-rollback: composer-update
 test:
 		@docker-compose exec php composer test
 
+test-unit:
+		@docker-compose exec php composer test:unit
+
+test-types:
+		@docker-compose exec php composer test:types
+
 service:
 		@docker-compose exec php composer fetch

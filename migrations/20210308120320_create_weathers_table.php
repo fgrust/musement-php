@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 final class CreateWeathersTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->schema->create('weathers', function (Blueprint $table) {
             $table->unsignedInteger('city_id');
@@ -18,7 +18,7 @@ final class CreateWeathersTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         $this->schema->table('weathers', function (Blueprint $table) {
             $table->dropForeign('weathers_city_id_foreign');

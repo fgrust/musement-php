@@ -1,0 +1,28 @@
+#includes:
+#    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - app
+        - config
+        - migrations
+        - tests
+        - routes
+        - public
+        - app.php
+        - bootstrap.php
+    excludePaths:
+        - vendor
+    bootstrapFiles:
+        - vendor/autoload.php
+        - bootstrap.php
+    ignoreErrors:
+        -
+            message: '#^Call to an undefined static method [a-zA-Z0-9\\]+::[a-zA-Z0-9]+\(\)\.$#'
+            paths:
+                - app/Console.php
+                - tests/ControllerTest.php
+                - tests/ModelTest.php
+                - app/Controllers/Controller.php
+services:

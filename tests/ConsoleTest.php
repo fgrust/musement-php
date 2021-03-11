@@ -14,7 +14,7 @@ class MusementTest extends TestCase
         $_ENV['WEATHER_API_KEY'] = "87afad46272d4c35975141130210303";
     }
 
-    public function testFetchListOfCities()
+    public function testFetchListOfCities(): void
     {
         $musement = new Musement();
         $musement->fetchListOfCities();
@@ -34,7 +34,7 @@ class MusementTest extends TestCase
         $this->assertIsNumeric($city['longitude']);
     }
 
-    public function testFetchListOfCitiesExceptionWithAPIWrongDomain()
+    public function testFetchListOfCitiesExceptionWithAPIWrongDomain(): void
     {
         $musement = new Musement();
         $_ENV['MUSEMENT_API_URI'] = 'https://request.exception.com';
@@ -43,7 +43,7 @@ class MusementTest extends TestCase
         $musement->fetchListOfCities();
     }
 
-    public function testFetchListOfCitiesExceptionWithAPIWrongParams()
+    public function testFetchListOfCitiesExceptionWithAPIWrongParams(): void
     {
         $musement = new Musement();
         $_ENV['MUSEMENT_API_URI'] = 'https://api.musement.com/api/v3/citi';
@@ -52,7 +52,7 @@ class MusementTest extends TestCase
         $musement->fetchListOfCities();
     }
 
-    public function testFetchWeather()
+    public function testFetchWeather(): void
     {
         $musement = new Musement();
         $musement->fetchListOfCities();
@@ -94,7 +94,7 @@ class MusementTest extends TestCase
         );
     }
 
-    public function testFetchWeatherExceptionWithAPIWrongDomain()
+    public function testFetchWeatherExceptionWithAPIWrongDomain(): void
     {
         $musement = new Musement();
         $musement->fetchListOfCities();
@@ -105,7 +105,7 @@ class MusementTest extends TestCase
         $musement->fetchWeathers();
     }
 
-    public function testFetchWeatherExceptionWithAPIWrongKey()
+    public function testFetchWeatherExceptionWithAPIWrongKey(): void
     {
         $musement = new Musement();
         $musement->fetchListOfCities();
@@ -116,7 +116,7 @@ class MusementTest extends TestCase
         $musement->fetchWeathers();
     }
 
-    public function testOutput()
+    public function testOutput(): void
     {
         ob_start();
         Musement::output('Amsterdam', 'Rain', 'Cloudy');

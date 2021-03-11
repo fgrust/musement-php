@@ -3,7 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * 
+ * @property int $city_id
+ * @property string $date
+ * @property string $weather
+ */
 class Weather extends Model
 {
     protected $table = 'weathers';
@@ -12,11 +19,15 @@ class Weather extends Model
 
     public $incrementing = false;
 
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * 
+     * @return mixed[] 
+     */
     public function toArray()
     {
         return [

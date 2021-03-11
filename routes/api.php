@@ -9,7 +9,7 @@ $router->set404(function () {
     echo 'Not Found';
 });
 
-$router->get('cities', 'Controller@index');
-$router->get('cities/(\d+)', 'Controller@show');
+$router->get('cities', 'Controller@index'); // @phpstan-ignore-line
+$router->get('cities/(\d+)', 'Controller@show'); // @phpstan-ignore-line
 
 return $router;
