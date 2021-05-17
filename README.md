@@ -1,4 +1,4 @@
-# Backend PHP tech homework
+# PHP, PHPUnit, PHPStan, Docker Sample
 
 ## Step 1 | Development
 
